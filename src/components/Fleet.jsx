@@ -6,108 +6,98 @@ gsap.registerPlugin(ScrollTrigger);
 
 const ships = [
     {
-        id: 1,
-        name: "ASTRA VOYAGER",
-        type: "Luxury Cruiser",
-        speed: "0.8c",
-        capacity: "400 Passengers",
-        desc: "The pinnacle of interstellar luxury. Experience the cosmos in comfort.",
-        image: "/fleet-voyager.png"
+        name: "The Voyager",
+        class: "Exploration Class",
+        description: "Designed for deep space reconnaissance and long-duration missions.",
+        image: "https://images.unsplash.com/photo-1541185933-710f50748747?auto=format&fit=crop&q=80&w=1000"
     },
     {
-        id: 2,
-        name: "STELLAR PHANTOM",
-        type: "Reconnaissance",
-        speed: "0.95c",
-        capacity: "12 Crew",
-        desc: "Built for speed and stealth. Reach the outer rim in record time.",
-        image: "/fleet-phantom.png"
+        name: "Stellar Horizon",
+        class: "Luxury Liner",
+        description: "Experience the cosmos in unparalleled comfort and style.",
+        image: "https://images.unsplash.com/photo-1517976487492-5750f3195933?auto=format&fit=crop&q=80&w=1000"
     },
     {
-        id: 3,
-        name: "ORION HAULER",
-        type: "Heavy Transport",
-        speed: "0.4c",
-        capacity: "50,000 Tons",
-        desc: "The backbone of galactic trade. Reliable, massive, and enduring.",
-        image: "/fleet-hauler.png"
+        name: "Nebula Drifter",
+        class: "Scientific Vessel",
+        description: "Equipped with state-of-the-art labs for astrophysical research.",
+        image: "https://images.unsplash.com/photo-1446776811953-b23d57bd21aa?auto=format&fit=crop&q=80&w=1000"
     }
 ];
 
 const Fleet = () => {
     const sectionRef = useRef(null);
-    const triggerRef = useRef(null);
+    const shipsRef = useRef([]);
 
     useEffect(() => {
-        const pin = gsap.fromTo(sectionRef.current,
+        const section = sectionRef.current;
+
+        gsap.fromTo(section.querySelector('h2'),
+            { opacity: 0, y: 50 },
             {
-                translateX: 0
-            },
-            {
-                translateX: "-200vw",
-                ease: "none",
+                opacity: 1,
+                y: 0,
                 duration: 1,
                 scrollTrigger: {
-                    trigger: triggerRef.current,
-                    start: "top top",
-                    end: "2000 top",
-                    scrub: 0.6,
-                    pin: true,
+                    trigger: section,
+                    start: "top 80%",
                 }
             }
         );
 
-        return () => {
-            pin.kill();
-        };
+        shipsRef.current.forEach((ship, index) => {
+            const direction = index % 2 === 0 ? -100 : 100;
+
+            gsap.fromTo(ship,
+                { opacity: 0, x: direction },
+                {
+                    opacity: 1,
+                    x: 0,
+                    duration: 1,
+                    scrollTrigger: {
+                        trigger: ship,
+                        start: "top 70%",
+                    }
+                }
+            );
+        });
     }, []);
 
     return (
-        <section className="overflow-hidden bg-black border-t border-white/10">
-            <div ref={triggerRef}>
-                <div ref={sectionRef} className="flex h-screen w-[300vw]">
+        <section ref={sectionRef} className="py-32 bg-black text-white overflow-hidden">
+            <div className="container mx-auto px-4">
+                <h2 className="text-5xl md:text-8xl font-display font-bold text-center mb-24 tracking-tighter">
+                    THE FLEET
+                </h2>
+
+                <div className="space-y-32">
                     {ships.map((ship, index) => (
-                        <div key={ship.id} className="w-screen h-full flex items-center justify-center relative border-r border-white/10 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]">
-
-                            <div className="container mx-auto px-8 grid grid-cols-1 md:grid-cols-2 gap-12 items-center relative z-10">
-                                <div className="space-y-8">
-                                    <div className="flex items-center gap-4">
-                                        <div className="h-px w-12 bg-white"></div>
-                                        <div className="text-white font-mono text-xs tracking-[0.3em]">MODEL 0{index + 1}</div>
-                                    </div>
-
-                                    <h2 className="text-6xl md:text-8xl font-display font-bold text-white tracking-tighter">{ship.name}</h2>
-
-                                    <p className="text-xl text-gray-400 max-w-md font-light leading-relaxed border-l border-white/20 pl-6">
-                                        {ship.desc}
-                                    </p>
-
-                                    <div className="grid grid-cols-2 gap-8 pt-8 border-t border-white/10">
-                                        <div>
-                                            <div className="text-gray-500 text-xs font-mono uppercase tracking-widest mb-2">Max Speed</div>
-                                            <div className="text-3xl font-display text-white">{ship.speed}</div>
-                                        </div>
-                                        <div>
-                                            <div className="text-gray-500 text-xs font-mono uppercase tracking-widest mb-2">Capacity</div>
-                                            <div className="text-3xl font-display text-white">{ship.capacity}</div>
-                                        </div>
-                                    </div>
+                        <div
+                            key={index}
+                            ref={el => shipsRef.current[index] = el}
+                            className={`flex flex-col ${index % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12`}
+                        >
+                            <div className="w-full md:w-1/2">
+                                <div className="relative aspect-video overflow-hidden rounded-sm group">
+                                    <img
+                                        src={ship.image}
+                                        alt={ship.name}
+                                        className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                    />
+                                    <div className="absolute inset-0 bg-blue-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500 mix-blend-overlay" />
                                 </div>
+                            </div>
 
-                                {/* Ship Image */}
-                                <div className="relative aspect-square flex items-center justify-center group">
-                                    {/* Schematic Circle */}
-                                    <div className="absolute inset-0 border border-white/10 rounded-full scale-75 group-hover:scale-90 transition-transform duration-700"></div>
-                                    <div className="absolute inset-0 border border-dashed border-white/10 rounded-full scale-[0.6] animate-[spin_20s_linear_infinite]"></div>
-
-                                    <div className="relative z-10 w-full h-full flex items-center justify-center transition-transform duration-500 hover:scale-105">
-                                        <img
-                                            src={ship.image}
-                                            alt={ship.name}
-                                            className="w-full h-full object-contain grayscale contrast-125 drop-shadow-[0_0_15px_rgba(255,255,255,0.1)]"
-                                        />
-                                    </div>
-                                </div>
+                            <div className="w-full md:w-1/2 space-y-6">
+                                <div className="h-px w-20 bg-blue-500" />
+                                <h3 className="text-4xl md:text-6xl font-display font-bold">{ship.name}</h3>
+                                <p className="text-blue-400 font-mono tracking-widest uppercase">{ship.class}</p>
+                                <p className="text-gray-400 text-lg max-w-md leading-relaxed">
+                                    {ship.description}
+                                </p>
+                                <button className="px-8 py-3 border border-white/20 hover:bg-white hover:text-black transition-all uppercase tracking-widest text-sm">
+                                    View Specs
+                                </button>
                             </div>
                         </div>
                     ))}

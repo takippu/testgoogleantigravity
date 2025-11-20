@@ -5,60 +5,78 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 gsap.registerPlugin(ScrollTrigger);
 
 const Mission = () => {
-    const containerRef = useRef(null);
-    const imageRef = useRef(null);
+    const sectionRef = useRef(null);
     const textRef = useRef(null);
+    const bgRef = useRef(null);
 
     useEffect(() => {
-        const tl = gsap.timeline({
+        const section = sectionRef.current;
+        const text = textRef.current;
+        const bg = bgRef.current;
+
+        // Parallax Background
+        gsap.to(bg, {
+            yPercent: 30,
+            ease: "none",
             scrollTrigger: {
-                trigger: containerRef.current,
-                start: "top center",
+                trigger: section,
+                start: "top bottom",
                 end: "bottom top",
-                scrub: true,
+                scrub: true
             }
         });
 
-        tl.to(imageRef.current, {
-            y: 100,
-            ease: "none"
-        }, 0);
-
-        tl.to(textRef.current, {
-            y: -50,
-            ease: "none"
-        }, 0);
-
+        // Text Reveal
+        gsap.fromTo(text.children,
+            { y: 100, opacity: 0 },
+            {
+                y: 0,
+                opacity: 1,
+                duration: 1,
+                stagger: 0.2,
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 60%",
+                }
+            }
+        );
     }, []);
 
     return (
-        <section ref={containerRef} className="relative py-32 bg-black overflow-hidden border-t border-white/10">
-            <div className="container mx-auto px-4 relative z-10">
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
-                    <div ref={textRef} className="order-2 lg:order-1">
-                        <div className="w-12 h-1 bg-white mb-8"></div>
-                        <h2 className="text-5xl md:text-7xl font-display font-bold mb-8 leading-tight text-white">
-                            OUR <br /> MISSION
-                        </h2>
-                        <p className="text-xl text-gray-400 mb-6 font-light leading-relaxed max-w-lg">
-                            We believe that humanity's destiny lies among the stars. For decades, we have pushed the boundaries of propulsion technology to make interstellar travel not just possible, but comfortable.
-                        </p>
-                        <p className="text-xl text-gray-400 font-light leading-relaxed max-w-lg">
-                            From the mining colonies of the Belt to the luxury resorts of Titan, Astra Nova connects you to the universe.
-                        </p>
-                    </div>
+        <section ref={sectionRef} className="relative min-h-screen flex items-center justify-center overflow-hidden py-20">
+            {/* Parallax Background Image */}
+            <div
+                ref={bgRef}
+                className="absolute inset-0 z-0"
+                style={{
+                    backgroundImage: 'url("https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=2000")',
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    height: '120%', // Taller for parallax
+                    top: '-10%'
+                }}
+            />
+            <div className="absolute inset-0 bg-black/60 z-10" />
 
-                    <div className="order-1 lg:order-2 relative">
-                        <div ref={imageRef} className="relative z-10 aspect-[4/5] bg-gray-900 overflow-hidden border border-white/10">
-                            <div className="absolute inset-0 bg-gradient-to-b from-transparent to-black/80 z-10"></div>
-                            <img
-                                src="https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2072&auto=format&fit=crop"
-                                alt="Space Mission"
-                                className="w-full h-full object-cover grayscale contrast-125"
-                            />
-                            {/* Overlay Grid */}
-                            <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff05_1px,transparent_1px),linear-gradient(to_bottom,#ffffff05_1px,transparent_1px)] bg-[size:40px_40px] z-20 pointer-events-none"></div>
-                        </div>
+            <div ref={textRef} className="relative z-20 container mx-auto px-4 text-center">
+                <h2 className="text-5xl md:text-8xl font-display font-bold mb-8 tracking-tighter">
+                    OUR MISSION
+                </h2>
+                <p className="text-xl md:text-3xl font-light max-w-4xl mx-auto leading-relaxed text-gray-200">
+                    To push the boundaries of human existence, exploring the cosmos not as conquerors, but as curious travelers seeking the truth of our universe.
+                </p>
+                <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-8 text-left max-w-5xl mx-auto">
+                    <div className="p-6 border-l border-white/30 backdrop-blur-sm">
+                        <h3 className="text-2xl font-bold mb-2">Exploration</h3>
+                        <p className="text-gray-400">Charting the unknown sectors of the galaxy.</p>
+                    </div>
+                    <div className="p-6 border-l border-white/30 backdrop-blur-sm">
+                        <h3 className="text-2xl font-bold mb-2">Sustainability</h3>
+                        <p className="text-gray-400">Eco-friendly propulsion and life support.</p>
+                    </div>
+                    <div className="p-6 border-l border-white/30 backdrop-blur-sm">
+                        <h3 className="text-2xl font-bold mb-2">Discovery</h3>
+                        <p className="text-gray-400">Finding new habitable worlds for humanity.</p>
                     </div>
                 </div>
             </div>

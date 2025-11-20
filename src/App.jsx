@@ -1,10 +1,17 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Lenis from '@studio-freight/lenis';
 import { gsap } from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import Hero from './components/Hero';
 import Fleet from './components/Fleet';
 import Mission from './components/Mission';
+import Technology from './components/Technology';
+import Crew from './components/Crew';
+import Testimonials from './components/Testimonials';
 import Booking from './components/Booking';
+import Footer from './components/Footer';
+
+gsap.registerPlugin(ScrollTrigger);
 
 const Cursor = () => {
   const cursorRef = useRef(null);
@@ -56,9 +63,13 @@ function App() {
     <div className="bg-black min-h-screen text-white selection:bg-white selection:text-black cursor-none">
       <Cursor />
       <Hero />
-      <Fleet />
       <Mission />
+      <Technology />
+      <Fleet />
+      <Crew />
+      <Testimonials />
       <Booking />
+      <Footer />
     </div>
   );
 }
