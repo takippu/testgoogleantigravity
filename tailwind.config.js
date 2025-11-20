@@ -8,11 +8,12 @@ export default {
     extend: {
       colors: {
         space: {
-          950: '#0b0d17', // Deep space blue/black
-          900: '#15192b',
-          800: '#222842',
-          accent: '#3b82f6', // Bright blue star
-          highlight: '#60a5fa',
+          950: '#000000', // Pure Black
+          900: '#0a0a0a', // Almost Black
+          800: '#262626', // Dark Gray
+          700: '#404040', // Medium Gray
+          accent: '#ffffff', // White
+          highlight: '#ffffff', // White
         }
       },
       fontFamily: {
@@ -20,7 +21,7 @@ export default {
         display: ['Orbitron', 'sans-serif'],
       },
       backgroundImage: {
-        'stars': "url('/stars-bg.jpg')",
+        'stars': "none", // Removed colorful bg
       }
     },
   },
